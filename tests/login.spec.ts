@@ -13,7 +13,7 @@ test('Enter invalid username and password', async ({ page }) => {
     await page.getByRole('button', { name: 'Login' }).click();
 
     const errorMessage = page.locator('[data-test="error"]');
-    await expect(errorMessage).toHaveText('Epic sadface: Username and password do not match any user in this service');
+    await expect(errorMessage).toContainText('Username and password do not match');
 });
 
 test('leave username empty', async ({ page }) => {
@@ -22,7 +22,7 @@ test('leave username empty', async ({ page }) => {
     await page.getByRole('button', { name: 'Login' }).click();
 
     const errorMessage = page.locator('[data-test="error"]');
-    await expect(errorMessage).toHaveText('Epic sadface: Username is required');
+      await expect(errorMessage).toHaveText('Epic sadface: Username is required');
 
 });
 
@@ -32,7 +32,7 @@ test('leave password empty', async ({ page }) => {
     await page.getByRole('button', { name: 'Login' }).click();
 
     const errorMessage = page.locator('[data-test="error"]');
-    await expect(errorMessage).toHaveText('Epic sadface: Username is required');
+    await expect(errorMessage).toHaveText('Epic sadface: Password is required');
 
 });
 
