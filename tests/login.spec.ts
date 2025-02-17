@@ -50,6 +50,7 @@ test('leave both username and password empty', async ({ page }) => {
 test('Fill in login credentials', async({page}) => {
     await page.getByPlaceholder('username').fill('standard_user');
     await page.getByPlaceholder('password').fill('secret_sauce');
+    //role is the button so we have to take unique atribute, if its unique then button is enough 
     await page.getByRole('button',{name:'login'}).click();
 
     const backpack = page.locator('.inventory_item_name', { hasText: 'Sauce Labs Backpack' });
