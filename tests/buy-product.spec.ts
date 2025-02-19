@@ -14,7 +14,7 @@ test.describe('login flow', () => {
         await expect(page.locator('.inventory_list')).toBeVisible();
     });
 
-    test('Fill buyer information to contiune the shopping',async ({page}) =>{
+    test('Fill buyer information to view total price',async ({page}) =>{
         await page.locator('.inventory_item')
         .filter({ hasText: 'Sauce Labs Bolt T-Shirt' })
         .getByRole('button', { name: 'Add to cart' }).click();
@@ -26,10 +26,48 @@ test.describe('login flow', () => {
         await page.getByPlaceholder('Zip/Postal Code').fill('some code');
         await page.getByRole('button', { name: 'Continue' }).click();
 
-        const ProductDescription = page.locator('[data_test="cart-desc-label"]');
-        await expect (ProductDescription).toBeVisible();
+        // Verify click contiune button to view total price
+        const TotalPrice = page.locator('[data_test="total-info-label"]');
+        await expect (TotalPrice).toContainText('Price Total');
     });
 
 
+    test('Order completed', async ({page})=>{
+        await page.locator('.inventory_item')
+        .filter({ hasText: 'Sauce Labs Bolt T-Shirt' })
+        .getByRole('button', { name: 'Add to cart' }).click();
+        await page.locator('.shopping_cart_link').click();
+        await page.locator('[data-test="checkout"]').click()
+
+        await page.getByPlaceholder('First Name').fill('some name');
+        await page.getByPlaceholder('Last Name').fill('some lastname');
+        await page.getByPlaceholder('Zip/Postal Code').fill('some code');
+        await page.getByRole('button', { name: 'Continue' }).click();
+        await page.getByRole('button',{name:'finish'}).click();
+
+        //Finishing the order process by confirming the order details
+        const OrderCompleted = page.locator('[data-test="Your Cart"]');
+        await expect (OrderCompleted).toContainText('Your order has been dispatched, and will arrive just as fast as the pony can get there!');   
+    });
+
+    test('Clicking "back Home" button to navigate to the home page', async ({page}) =>{
+        await page.locator('.inventory_item')
+        .filter({ hasText: 'Sauce Labs Bolt T-Shirt' })
+        .getByRole('button', { name: 'Add to cart' }).click();
+        await page.locator('.shopping_cart_link').click();
+        await page.locator('[data-test="checkout"]').click()
+
+        await page.getByPlaceholder('First Name').fill('some name');
+        await page.getByPlaceholder('Last Name').fill('some lastname');
+        await page.getByPlaceholder('Zip/Postal Code').fill('some code');
+        await page.getByRole('button', { name: 'Continue' }).click();
+        await page.getByRole('button',{name:'finish'}).click();
+        await page.getByRole('button',{name:'Back Home'}).click();
+
+        //Navigate to the home page to continue shopping 
+        const backpack = page.locator('.inventory_item_name', { hasText: 'Sauce Labs Backpack' });
+        await expect(backpack).toBeVisible();
+
+    });
 
 });
