@@ -14,40 +14,53 @@ test.describe('login flow', () => {
         await expect(page.locator('.inventory_list')).toBeVisible();
     });
 
-    test('Fill buyer information to view total price',async ({page}) =>{
+    test('Fill buyer information to view total price', async ({ page }) => {
+        // Add item to cart
         await page.locator('.inventory_item')
-        .filter({ hasText: 'Sauce Labs Bolt T-Shirt' })
-        .getByRole('button', { name: 'Add to cart' }).click();
+            .filter({ hasText: 'Sauce Labs Bolt T-Shirt' })
+            .getByRole('button', { name: 'Add to cart' }).click();
+    
+        // Navigate to cart and proceed to checkout
         await page.locator('.shopping_cart_link').click();
-        await page.locator('[data-test="checkout"]').click()
-
+        await page.locator('[data-test="checkout"]').click();
+    
+        // Fill out buyer information
         await page.getByPlaceholder('First Name').fill('some name');
         await page.getByPlaceholder('Last Name').fill('some lastname');
         await page.getByPlaceholder('Zip/Postal Code').fill('some code');
         await page.getByRole('button', { name: 'Continue' }).click();
-
-        // Verify click contiune button to view total price
-        const TotalPrice = page.locator('[data_test="total-info-label"]');
-        await expect (TotalPrice).toContainText('Price Total');
+    
+        // Wait for total price element to be visible
+        const totalPrice = page.locator('.summary_total_label');
+        await totalPrice.waitFor();
+    
+        // Verify total price text
+        await expect(totalPrice).toContainText('Total:');
     });
 
 
-    test('Order completed', async ({page})=>{
+    test('Order completed', async ({page}) => {
+        // Add item to cart
         await page.locator('.inventory_item')
-        .filter({ hasText: 'Sauce Labs Bolt T-Shirt' })
-        .getByRole('button', { name: 'Add to cart' }).click();
+            .filter({ hasText: 'Sauce Labs Bolt T-Shirt' })
+            .getByRole('button', { name: 'Add to cart' }).click();
+        
+        // Navigate to cart and proceed to checkout
         await page.locator('.shopping_cart_link').click();
-        await page.locator('[data-test="checkout"]').click()
-
+        await page.locator('[data-test="checkout"]').click();
+    
+        // Fill out buyer information
         await page.getByPlaceholder('First Name').fill('some name');
         await page.getByPlaceholder('Last Name').fill('some lastname');
         await page.getByPlaceholder('Zip/Postal Code').fill('some code');
         await page.getByRole('button', { name: 'Continue' }).click();
-        await page.getByRole('button',{name:'finish'}).click();
-
-        //Finishing the order process by confirming the order details
-        const OrderCompleted = page.locator('[data-test="Your Cart"]');
-        await expect (OrderCompleted).toContainText('Your order has been dispatched, and will arrive just as fast as the pony can get there!');   
+    
+        // Click on Finish button
+        await page.getByRole('button', { name: 'Finish' }).click();
+    
+        // Verify order completion message
+        const orderCompleted = page.locator('.complete-text');
+        await expect(orderCompleted).toContainText('Your order has been dispatched, and will arrive just as fast as the pony can get there!');
     });
 
     test('Clicking "back Home" button to navigate to the home page', async ({page}) =>{

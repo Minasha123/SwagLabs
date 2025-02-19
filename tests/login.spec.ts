@@ -13,8 +13,8 @@ test('Enter invalid username and password', async ({ page }) => {
     await page.getByRole('button', { name: 'Login' }).click();
 
     const errorMessage = page.locator('[data-test="error"]');
-    await expect(errorMessage).toContainText('Username and password do not match');
-});
+      await expect(errorMessage).toContainText('Username and password do not match');
+    });
 
 test('leave username empty', async ({ page }) => {
     await page.getByPlaceholder('Username').fill('');
@@ -23,8 +23,7 @@ test('leave username empty', async ({ page }) => {
 
     const errorMessage = page.locator('[data-test="error"]');
       await expect(errorMessage).toHaveText('Epic sadface: Username is required');
-
-});
+    });
 
 test('leave password empty', async ({ page }) => {
     await page.getByPlaceholder('Username').fill('standard_user');
@@ -32,9 +31,9 @@ test('leave password empty', async ({ page }) => {
     await page.getByRole('button', { name: 'Login' }).click();
 
     const errorMessage = page.locator('[data-test="error"]');
-    await expect(errorMessage).toHaveText('Epic sadface: Password is required');
+     await expect(errorMessage).toHaveText('Epic sadface: Password is required');
+    });
 
-});
 
 test('leave both username and password empty', async ({ page }) => {
     await page.getByPlaceholder('Username').fill('');
@@ -43,8 +42,8 @@ test('leave both username and password empty', async ({ page }) => {
 
     const errorMessage = page.locator('[data-test="error"]');
         await expect(errorMessage).toHaveText('Epic sadface: Username is required');
+    });
 
-});
 
 //Positive scenario for login 
 test('Fill in login credentials', async({page}) => {
@@ -55,7 +54,7 @@ test('Fill in login credentials', async({page}) => {
 
     const backpack = page.locator('.inventory_item_name', { hasText: 'Sauce Labs Backpack' });
         await expect(backpack).toBeVisible();
-});
+    });
 
 });
 
