@@ -1,14 +1,10 @@
 import { test, expect } from '@playwright/test';
+import { login } from './functions/login-function';
 
 test.describe('login flow', () => {
 
     test.beforeEach(async ({ page }) => {
-        await page.goto('https://www.saucedemo.com/');
-        
-        // Perform login before each test
-        await page.getByPlaceholder('username').fill('standard_user');
-        await page.getByPlaceholder('password').fill('secret_sauce');
-        await page.getByRole('button', { name: 'Login' }).click();
+    await login(page);
 
         // Verify login is successful
         await expect(page.locator('.inventory_list')).toBeVisible();

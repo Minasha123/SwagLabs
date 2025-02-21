@@ -1,14 +1,12 @@
 import { test, expect } from '@playwright/test';
+import { addProduct } from './functions/add-product';
+import { login } from './functions/login-function';
+import { buyerInfo } from './functions/buyer-details';
 
 test.describe('login flow', () => {
 
     test.beforeEach(async ({ page }) => {
-        await page.goto('https://www.saucedemo.com/');
-        
-        // Perform login before each test
-        await page.getByPlaceholder('username').fill('standard_user');
-        await page.getByPlaceholder('password').fill('secret_sauce');
-        await page.getByRole('button', { name: 'Login' }).click();
+        await login(page);
 
         // Verify login is successful
         await expect(page.locator('.inventory_list')).toBeVisible();
@@ -16,19 +14,10 @@ test.describe('login flow', () => {
 
     test('Fill buyer information to view total price', async ({ page }) => {
         // Add item to cart
-        await page.locator('.inventory_item')
-            .filter({ hasText: 'Sauce Labs Bolt T-Shirt' })
-            .getByRole('button', { name: 'Add to cart' }).click();
-    
-        // Navigate to cart and proceed to checkout
-        await page.locator('.shopping_cart_link').click();
-        await page.locator('[data-test="checkout"]').click();
+         await addProduct(page, 'Sauce Labs Bolt T-Shirt');
     
         // Fill out buyer information
-        await page.getByPlaceholder('First Name').fill('some name');
-        await page.getByPlaceholder('Last Name').fill('some lastname');
-        await page.getByPlaceholder('Zip/Postal Code').fill('some code');
-        await page.getByRole('button', { name: 'Continue' }).click();
+        await buyerInfo(page, 'firstName','lastName','psotalCode');
     
         // Wait for total price element to be visible
         const totalPrice = page.locator('.summary_total_label');
@@ -41,19 +30,10 @@ test.describe('login flow', () => {
 
     test('Order completed', async ({page}) => {
         // Add item to cart
-        await page.locator('.inventory_item')
-            .filter({ hasText: 'Sauce Labs Bolt T-Shirt' })
-            .getByRole('button', { name: 'Add to cart' }).click();
-        
-        // Navigate to cart and proceed to checkout
-        await page.locator('.shopping_cart_link').click();
-        await page.locator('[data-test="checkout"]').click();
+        await addProduct(page, 'Sauce Labs Bolt T-Shirt');
     
         // Fill out buyer information
-        await page.getByPlaceholder('First Name').fill('some name');
-        await page.getByPlaceholder('Last Name').fill('some lastname');
-        await page.getByPlaceholder('Zip/Postal Code').fill('some code');
-        await page.getByRole('button', { name: 'Continue' }).click();
+        await buyerInfo(page, 'firstName','lastName','psotalCode');
     
         // Click on Finish button
         await page.getByRole('button', { name: 'Finish' }).click();
@@ -64,16 +44,10 @@ test.describe('login flow', () => {
     });
 
     test('Clicking "back Home" button to navigate to the home page', async ({page}) =>{
-        await page.locator('.inventory_item')
-        .filter({ hasText: 'Sauce Labs Bolt T-Shirt' })
-        .getByRole('button', { name: 'Add to cart' }).click();
-        await page.locator('.shopping_cart_link').click();
-        await page.locator('[data-test="checkout"]').click()
+        await addProduct(page, 'Sauce Labs Bolt T-Shirt');
 
-        await page.getByPlaceholder('First Name').fill('some name');
-        await page.getByPlaceholder('Last Name').fill('some lastname');
-        await page.getByPlaceholder('Zip/Postal Code').fill('some code');
-        await page.getByRole('button', { name: 'Continue' }).click();
+        await buyerInfo(page, 'firstName','lastName','psotalCode');
+        
         await page.getByRole('button',{name:'finish'}).click();
         await page.getByRole('button',{name:'Back Home'}).click();
 

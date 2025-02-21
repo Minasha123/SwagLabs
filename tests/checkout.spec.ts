@@ -1,14 +1,12 @@
  import { test, expect } from '@playwright/test';
+import { addProduct } from './functions/add-product';
+import { login } from './functions/login-function';
+
  
  test.describe('login flow', () => {
  
      test.beforeEach(async ({ page }) => {
-         await page.goto('https://www.saucedemo.com/');
-         
-         // Perform login before each test
-         await page.getByPlaceholder('username').fill('standard_user');
-         await page.getByPlaceholder('password').fill('secret_sauce');
-         await page.getByRole('button', { name: 'Login' }).click();
+         await login(page);
  
          // Verify login is successful
          await expect(page.locator('.inventory_list')).toBeVisible();
@@ -16,15 +14,7 @@
 
      test('Clicking "Checkout" button to process the order', async ({page}) => {
         // Add item to cart
-        await page.locator('.inventory_item')
-            .filter({ hasText: 'Sauce Labs Bolt T-Shirt' })
-            .getByRole('button', { name: 'Add to cart' }).click();
-        
-        // Navigate to the cart
-        await page.locator('.shopping_cart_link').click();
-    
-        // Click checkout button
-        await page.locator('[data-test="checkout"]').click();
+        await addProduct(page, 'Sauce Labs Bolt T-Shirt');
     
         // Verify that the user is navigated to the checkout personal information page
         const checkoutTitle = page.locator('.title');
