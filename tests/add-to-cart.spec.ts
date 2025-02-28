@@ -54,7 +54,7 @@ test.describe('login flow', () => {
 
         // Verify that the product list is visible
         const productList = page.locator('.inventory_item');
-        await expect(page.locator('.inventory_list')).toBeVisible();
+        await expect(productList.first()).toBeVisible();
     });
 
 
